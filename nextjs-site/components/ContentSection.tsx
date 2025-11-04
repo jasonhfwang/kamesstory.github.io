@@ -103,7 +103,7 @@ export default function ContentSection({
     chance: 0.8,
     range: [65, 125],
     overdrive: false,
-    playOnMount: false,
+    playOnMount: true,
     onAnimationEnd: () => setIsScrambling(false),
   });
 
