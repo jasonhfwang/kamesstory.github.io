@@ -33,14 +33,15 @@ export default function Home() {
           </h1>
           <div className="space-y-4 text-foreground text-base">
             <p>
-              I'm currently Founding Engineer at{" "}
+              I'm currently taking a break to dive deeper into research.{" "}
+              Previously, I was Founding Engineer at{" "}
               <BioLink href="https://www.sequoiacap.com/article/partnering-with-abby-care-a-caregiving-revolution/">
                 AbbyCare
               </BioLink>
               , building a tech-enabled healthcare agency for low-income
-              families. Previously, I cofounded{" "}
+              families. I also cofounded{" "}
               <BioLink href="https://cohere.so">Cohere</BioLink> (YC S20), which
-              was recently{" "}
+              was{" "}
               <BioLink href="https://techcrunch.com/2023/06/26/as-the-generative-ai-craze-rages-on-fintech-ramp-acquires-ai-powered-customer-support-startup-cohere-io/">
                 acquired by Ramp
               </BioLink>
