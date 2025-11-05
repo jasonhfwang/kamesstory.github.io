@@ -33,8 +33,8 @@ export default function Home() {
           </h1>
           <div className="space-y-4 text-foreground text-base">
             <p>
-              I'm currently taking a break to dive deeper into research.{" "}
-              Previously, I was Founding Engineer at{" "}
+              I'm currently taking a break to explore and dive deeper into
+              research. Previously, I was Founding Engineer at{" "}
               <BioLink href="https://www.sequoiacap.com/article/partnering-with-abby-care-a-caregiving-revolution/">
                 AbbyCare
               </BioLink>
