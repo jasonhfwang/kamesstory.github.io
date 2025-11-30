@@ -45,7 +45,8 @@ export default function Home() {
               <BioLink href="https://techcrunch.com/2023/06/26/as-the-generative-ai-craze-rages-on-fintech-ramp-acquires-ai-powered-customer-support-startup-cohere-io/">
                 acquired by Ramp
               </BioLink>
-              .
+              . At Duke, I studied Computer Science, Math, and PPE (Philosophy,
+              Politics, and Economics).
             </p>
             <p>
               Besides working on things I love, I am a big fan of{" "}
