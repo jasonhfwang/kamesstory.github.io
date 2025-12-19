@@ -136,23 +136,6 @@ export default function ContentSection({
     onAnimationEnd: () => setIsScrambling(false),
   });
 
-  if (isLoading || !currentItem) {
-    return (
-      <div className="mb-10">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-display font-semibold text-foreground tracking-tight">
-            {title}
-          </h2>
-        </div>
-        <div className="relative border border-muted/20 p-4 bg-background h-24 flex items-center justify-center">
-          <span className="text-muted/50 font-mono text-sm animate-pulse">
-            Loading...
-          </span>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="mb-10">
       <div className="flex items-center justify-between mb-3">
@@ -162,14 +145,14 @@ export default function ContentSection({
         <button
           onClick={handleRefresh}
           onMouseLeave={(e) => e.currentTarget.blur()}
-          disabled={!isRefreshable}
+          disabled={!isRefreshable || isLoading}
           className="text-accent hover:text-secondary focus:text-accent active:scale-100 transition-all duration-100 cursor-pointer border-0 bg-transparent p-1 inline-flex items-center justify-center group text-xl focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ textDecoration: "none", borderBottom: "none" }}
           title="Refresh content"
         >
           <span
             className={`inline-block ${
-              !isRefreshable ? "animate-spin-slow" : ""
+              !isRefreshable || isLoading ? "animate-spin-slow" : ""
             } group-hover:[text-shadow:0_0_4px_rgba(0,212,255,0.2),0_0_8px_rgba(0,212,255,0.1)]`}
             style={{ paddingBottom: "4px", transformOrigin: "center" }}
           >
@@ -189,7 +172,7 @@ export default function ContentSection({
             animationDelay: `${timing.delay}s, ${timing.delay * 0.8}s`,
           }}
         >
-          <div className="text-foreground leading-relaxed font-mono">
+          <div className="text-foreground leading-relaxed font-mono min-h-[1.5em]">
             {processedContent.title && (
               <>
                 <strong className="font-bold">{processedContent.title}</strong>
