@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useScramble } from "use-scramble";
+import { useQuery } from "@tanstack/react-query";
 
 type ContentSectionProps = {
   title: string;
@@ -21,6 +22,7 @@ const animationPresets: Record<
 type ContentItem = {
   title: string;
   content: string;
+  slug: string;
 };
 
 // Strip markdown formatting to plain text for scrambling
@@ -42,59 +44,86 @@ function markdownToHTML(text: string): string {
     );
 }
 
+// Fisher-Yates shuffle
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export default function ContentSection({
   title,
   sectionType,
 }: ContentSectionProps) {
-  const [contentTitle, setContentTitle] = useState<string>("");
-  const [contentBody, setContentBody] = useState<string>("");
-  const [hasColon, setHasColon] = useState<boolean>(false);
-  const [strippedContent, setStrippedContent] = useState<string>("");
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [shuffledItems, setShuffledItems] = useState<ContentItem[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isRefreshable, setIsRefreshable] = useState(true);
   const [isScrambling, setIsScrambling] = useState(true);
 
   // Get preset timing based on section type (deterministic for SSR)
   const timing = animationPresets[sectionType];
 
-  const fetchRandomContent = async () => {
-    try {
-      const response = await fetch(`/api/content/${sectionType}`);
-      const data: ContentItem = await response.json();
+  const { data: allItems, isLoading } = useQuery({
+    queryKey: ["content", sectionType],
+    queryFn: async () => {
+      const response = await fetch(`/api/content/${sectionType}/all`);
+      if (!response.ok) throw new Error("Failed to fetch content");
+      return response.json() as Promise<ContentItem[]>;
+    },
+  });
 
-      // Extract bold title from the beginning of content
-      const titleMatch = data.content.match(/^\*\*([^*]+)\*\*(:?)\s*/);
-      if (titleMatch) {
-        setContentTitle(titleMatch[1]);
-        setHasColon(titleMatch[2] === ":");
-        setContentBody(data.content.substring(titleMatch[0].length));
-        setStrippedContent(
-          stripMarkdownLinks(data.content.substring(titleMatch[0].length))
-        );
-      } else {
-        setContentTitle("");
-        setHasColon(false);
-        setContentBody(data.content);
-        setStrippedContent(stripMarkdownLinks(data.content));
-      }
-
-      setIsScrambling(true);
-    } catch (error) {
-      console.error("Error fetching content:", error);
-    }
-  };
-
+  // Shuffle items once when they arrive or when sectionType changes
   useEffect(() => {
-    fetchRandomContent();
-  }, [sectionType]);
+    if (allItems && allItems.length > 0) {
+      setShuffledItems(shuffleArray(allItems));
+      setCurrentIndex(0);
+      setIsScrambling(true);
+    }
+  }, [allItems, sectionType]);
 
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    await fetchRandomContent();
-    setTimeout(() => setIsRefreshing(false), 500);
+  const currentItem = shuffledItems[currentIndex];
+
+  const processedContent = useMemo(() => {
+    if (!currentItem)
+      return { title: "", body: "", hasColon: false, stripped: "" };
+
+    const content = currentItem.content;
+    const titleMatch = content.match(/^\*\*([^*]+)\*\*(:?)\s*/);
+
+    if (titleMatch) {
+      return {
+        title: titleMatch[1],
+        hasColon: titleMatch[2] === ":",
+        body: content.substring(titleMatch[0].length),
+        stripped: stripMarkdownLinks(content.substring(titleMatch[0].length)),
+      };
+    } else {
+      return {
+        title: "",
+        hasColon: false,
+        body: content,
+        stripped: stripMarkdownLinks(content),
+      };
+    }
+  }, [currentItem]);
+
+  const handleRefresh = () => {
+    if (!isRefreshable || shuffledItems.length <= 1) return;
+
+    setIsRefreshable(false);
+    setIsScrambling(true);
+
+    setCurrentIndex((prev) => (prev + 1) % shuffledItems.length);
+
+    // Add a small delay before allowing another refresh for visual feedback
+    setTimeout(() => setIsRefreshable(true), 500);
   };
 
   const { ref } = useScramble({
-    text: strippedContent,
+    text: processedContent.stripped,
     speed: 1,
     tick: 1,
     step: 3,
@@ -107,6 +136,23 @@ export default function ContentSection({
     onAnimationEnd: () => setIsScrambling(false),
   });
 
+  if (isLoading || !currentItem) {
+    return (
+      <div className="mb-10">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-display font-semibold text-foreground tracking-tight">
+            {title}
+          </h2>
+        </div>
+        <div className="relative border border-muted/20 p-4 bg-background h-24 flex items-center justify-center">
+          <span className="text-muted/50 font-mono text-sm animate-pulse">
+            Loading...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mb-10">
       <div className="flex items-center justify-between mb-3">
@@ -116,14 +162,14 @@ export default function ContentSection({
         <button
           onClick={handleRefresh}
           onMouseLeave={(e) => e.currentTarget.blur()}
-          disabled={isRefreshing}
-          className="text-accent hover:text-secondary focus:text-accent active:scale-100 transition-all duration-100 cursor-pointer border-0 bg-transparent p-1 inline-flex items-center justify-center group text-xl focus:outline-none"
+          disabled={!isRefreshable}
+          className="text-accent hover:text-secondary focus:text-accent active:scale-100 transition-all duration-100 cursor-pointer border-0 bg-transparent p-1 inline-flex items-center justify-center group text-xl focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ textDecoration: "none", borderBottom: "none" }}
           title="Refresh content"
         >
           <span
             className={`inline-block ${
-              isRefreshing ? "animate-spin-slow" : ""
+              !isRefreshable ? "animate-spin-slow" : ""
             } group-hover:[text-shadow:0_0_4px_rgba(0,212,255,0.2),0_0_8px_rgba(0,212,255,0.1)]`}
             style={{ paddingBottom: "4px", transformOrigin: "center" }}
           >
@@ -144,10 +190,10 @@ export default function ContentSection({
           }}
         >
           <div className="text-foreground leading-relaxed font-mono">
-            {contentTitle && (
+            {processedContent.title && (
               <>
-                <strong className="font-bold">{contentTitle}</strong>
-                {hasColon ? ": " : " "}
+                <strong className="font-bold">{processedContent.title}</strong>
+                {processedContent.hasColon ? ": " : " "}
               </>
             )}
             {isScrambling ? (
@@ -156,7 +202,7 @@ export default function ContentSection({
               <span
                 className="[&_a]:border-b [&_a]:border-accent"
                 dangerouslySetInnerHTML={{
-                  __html: markdownToHTML(contentBody),
+                  __html: markdownToHTML(processedContent.body),
                 }}
               />
             )}
