@@ -183,6 +183,7 @@ export default function ContentSection({
               <span ref={ref} />
             ) : (
               <span
+                ref={ref}
                 className="[&_a]:border-b [&_a]:border-accent"
                 dangerouslySetInnerHTML={{
                   __html: markdownToHTML(processedContent.body),
