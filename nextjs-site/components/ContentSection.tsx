@@ -146,7 +146,7 @@ export default function ContentSection({
           onClick={handleRefresh}
           onMouseLeave={(e) => e.currentTarget.blur()}
           disabled={!isRefreshable || isLoading}
-          className="text-accent hover:text-secondary focus:text-accent active:scale-100 transition-all duration-100 cursor-pointer border-0 bg-transparent p-1 inline-flex items-center justify-center group text-xl focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-accent hover:text-secondary focus:text-accent active:scale-100 transition-all duration-100 cursor-pointer border-0 bg-transparent p-1 inline-flex items-center justify-center group text-xl focus:outline-none disabled:opacity-50 disabled:cursor-default disabled:hover:text-accent"
           style={{ textDecoration: "none", borderBottom: "none" }}
           title="Refresh content"
         >
