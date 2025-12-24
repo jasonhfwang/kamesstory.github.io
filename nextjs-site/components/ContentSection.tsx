@@ -30,14 +30,19 @@ function stripMarkdownLinks(text: string): string {
   return text
     .replace(/\*\*([^*]+)\*\*/g, "$1") // bold
     .replace(/_([^_]+)_/g, "$1") // italic (underscore)
+    .replace(/`([^`]+)`/g, "$1") // code
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1"); // links
 }
 
-// Convert markdown to HTML (bold, italic, links)
+// Convert markdown to HTML (bold, italic, links, code)
 function markdownToHTML(text: string): string {
   return text
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/_([^_]+)_/g, "<em>$1</em>")
+    .replace(
+      /`([^`]+)`/g,
+      '<code class="bg-muted/20 px-1.5 py-0.5 rounded text-[0.9em] font-mono">$1</code>'
+    )
     .replace(
       /\[([^\]]+)\]\(([^)]+)\)/g,
       '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-secondary transition-colors duration-150">$1</a>'
@@ -183,7 +188,6 @@ export default function ContentSection({
               <span ref={ref} />
             ) : (
               <span
-                ref={ref}
                 className="[&_a]:border-b [&_a]:border-accent"
                 dangerouslySetInnerHTML={{
                   __html: markdownToHTML(processedContent.body),
