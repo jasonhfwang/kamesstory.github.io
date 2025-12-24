@@ -2,4 +2,4 @@
 title: Dancing
 ---
 
-**Dancing:** It's rare in life to have the opportunity to become aware of every part of your body, and submerge into an flow state of expression. So many lessons to learn here — from playing with tension, being comfortable looking awkward, and leaning towards while controlling expression. Plus, the music's great too :) Come join me @ City Dance if you're interested!
+**Dancing:** is one of the great joys of my life. It's fundamentally freeing. This is true both physically — one of the things that nobody realizes is just how physically limited we are within our typical day-to-day — and even more importantly, emotionally. Dance gives me the space to sink into a flow, fall in tune with how I feel and who I am, and just express whatever I want to in that moment. There's so, so many lessons to learn from dance, from playing with tension, to being comfortable looking awkward, and even the control of just how much you want to express. [Come join me](mailto:hi@jasonwa.ng) @ City Dance if you're interested!
