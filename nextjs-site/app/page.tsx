@@ -61,7 +61,7 @@ export default function Home() {
               </BioLink>
               {". "}I am also a major Google Maps stan, so if you need guides to
               any places, you can see mine{" "}
-              <BioLink href="https://maps.app.goo.gl/AQVnkPu3f8KbYR1R8">
+              <BioLink href="https://jason-wang.notion.site/google-maps-lists-2d3f975abc858025860bcc43482f7cce">
                 here
               </BioLink>
               .
