@@ -42,10 +42,10 @@ export default function Home() {
               <BioLink href="https://www.sequoiacap.com/article/partnering-with-abby-care-a-caregiving-revolution/">
                 AbbyCare
               </BioLink>
-              , building an AI home health agency that leverages tech to deliver
-              radically higher quality and more accessible care. I also
-              cofounded <BioLink href="https://cohere.so">Cohere</BioLink> (YC
-              S20), which was{" "}
+              , building an AI home health agency delivering radically higher
+              quality and more accessible care. I also cofounded{" "}
+              <BioLink href="https://cohere.so">Cohere</BioLink> (YC S20), which
+              was{" "}
               <BioLink href="https://techcrunch.com/2023/06/26/as-the-generative-ai-craze-rages-on-fintech-ramp-acquires-ai-powered-customer-support-startup-cohere-io/">
                 acquired by Ramp
               </BioLink>
