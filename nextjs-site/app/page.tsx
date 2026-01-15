@@ -33,8 +33,12 @@ export default function Home() {
           </h1>
           <div className="space-y-4 text-foreground text-base">
             <p>
-              I'm currently taking a break to explore and dive deeper into
-              research. Previously, I was Founding Engineer at{" "}
+              I'm currently at{" "}
+              <BioLink href="https://www.pi.website/">
+                Physical Intelligence
+              </BioLink>
+              , building minds that can power any robot. Previously, I was
+              Founding Engineer at{" "}
               <BioLink href="https://www.sequoiacap.com/article/partnering-with-abby-care-a-caregiving-revolution/">
                 AbbyCare
               </BioLink>
