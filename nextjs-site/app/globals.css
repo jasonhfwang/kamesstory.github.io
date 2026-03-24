@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  background-color: #f7f9fc;
+}
+
 :root {
   /* Humanist oceanic tech - warm waters meet human-centered future */
   --background: #f7f9fc;
